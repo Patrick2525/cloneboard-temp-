@@ -1,7 +1,9 @@
-import React, {useState} from 'react'
+import React, {useState, useRef } from 'react'
 
 function BoardForm(props) {
     const [state, setState] = useState({});
+    const inputTitle = useRef();
+    const inputName = useRef();
 
     const handleChange = (e) => {
         setState(prevState => ({
@@ -14,12 +16,20 @@ function BoardForm(props) {
         e.preventDefault();
         props.onSaveData(state);
         setState({});
+        inputTitle.current.value ='';
+        inputName.current.value = '';
     }
+
+    const handleSelectRow = (row) => {
+        console.log(row);
+        //setState(row);
+    }
+
 
     return (
         <form onSubmit={handleSubmit}>
-            <input placeholder='title' name='brdtitle' onChange={handleChange}/>
-            <input placeholder='name' name='brdwriter' onChange={handleChange}/>
+            <input ref={inputTitle} placeholder='title' name='brdtitle' onChange={handleChange}/>
+            <input ref={inputName} placeholder='name' name='brdwriter' onChange={handleChange}/>
             <button type= 'submit'>Save</button>
         </form>
     )
