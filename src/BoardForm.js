@@ -1,6 +1,6 @@
-import React, {useState, useRef } from 'react'
+import React, {useState, useRef, forwardRef, useImperativeHandle } from 'react'
 
-function BoardForm(props) {
+function BoardForm(props, ref) {
     const [state, setState] = useState({});
     const inputTitle = useRef();
     const inputName = useRef();
@@ -21,6 +21,7 @@ function BoardForm(props) {
     }
 
     const handleSelectRow = (row) => {
+        
         console.log(row);
         //setState(row);
     }

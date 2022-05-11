@@ -3,7 +3,8 @@ import BoardItem from './BoardItem';
 import BoardForm from './BoardForm';
 
 function Page() {
-    const childRef = useRef();
+    const inputTitle = useRef();
+    const inputName = useRef();
     const [state, setState] = useState({
         maxNo : 3,
         board : [
@@ -20,6 +21,7 @@ function Page() {
             },
         ],
     });
+    const [inputState, setInputState] = useState({});
 
     const {board} = state;
 
@@ -31,20 +33,46 @@ function Page() {
         console.log(state.maxNo);
     }
 
-    const handleRemove = (brdno) => {
-        setState({
-            maxNo: state.maxNo,
-            board: state.board.filter(row => row.brdno !== brdno)
-        })
+    const handleRemove = (e) => {
+        console.log(e);
+
+        // setState({
+        //     maxNo: state.maxNo,
+        //     board: state.board.filter(row => row.brdno !== selectedRow.brdno)
+        // })
+        // console.log(selectedRow.brdno);
     }
     
     const handleEditRow = (row) => {
-        //childRef.current.handleSelectRow(row);
+
+    }
+
+    const handleEdit = () => {
+        
+    }
+
+    const handleChange = (e) => {
+        setInputState(prevState => ({
+            ...prevState,
+            [e.target.name]: e.target.value
+        }))
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        handleSaveData(inputState);
+        setInputState({});
+        inputTitle.current.value ='';
+        inputName.current.value = '';
     }
 
     return (
         <div>
-            <BoardForm onSaveData={handleSaveData} /*ref={childRef}*//>
+            <form onSubmit={handleSubmit}>
+                <input ref={inputTitle} placeholder='title' name='brdtitle' onChange={handleChange}/>
+                <input ref={inputName} placeholder='name' name='brdwriter' onChange={handleChange}/>
+                <button type='submit'>Save</button>
+            </form>
             <table border = '1'>
                 <tbody>
                     <tr align='center'>
@@ -54,7 +82,17 @@ function Page() {
                         <td width='100'>Date</td>
                     </tr>
                     {
-                        board.map(row => (<BoardItem key={row.brdno} row={row} onRemove={handleRemove} onEditRow={handleEditRow} />))
+                        board.map(row => { return(
+                            // 재작성해야함
+                            <tr key={row.brdno} row={row} onRemove={handleRemove}> 
+                                <td>{row.brdno}</td>
+                                <td>{row.brdtitle}</td>
+                                <td>{row.brdwriter}</td>
+                                <td>{row.brddate.toLocaleDateString('ko-KR')}</td>
+                                <td><button onClick={handleEdit}>Edit</button></td>
+                                <td><button onClick={handleRemove}>X</button></td>
+                            </tr>
+                        )})
                     }
                 </tbody>
             </table>
