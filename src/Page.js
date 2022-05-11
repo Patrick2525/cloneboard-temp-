@@ -3,6 +3,7 @@ import BoardItem from './BoardItem';
 import BoardForm from './BoardForm';
 
 function Page() {
+    const SelectedRow = useRef();
     const inputTitle = useRef();
     const inputName = useRef();
     const [state, setState] = useState({
@@ -35,6 +36,8 @@ function Page() {
 
     const handleRemove = (e) => {
         console.log(e);
+        
+        console.log(SelectedRow);
 
         // setState({
         //     maxNo: state.maxNo,
@@ -84,12 +87,12 @@ function Page() {
                     {
                         board.map(row => { return(
                             // 재작성해야함
-                            <tr key={row.brdno} row={row} onRemove={handleRemove}> 
+                            <tr key={row.brdno} row={row} ref={SelectedRow} > 
                                 <td>{row.brdno}</td>
                                 <td>{row.brdtitle}</td>
                                 <td>{row.brdwriter}</td>
                                 <td>{row.brddate.toLocaleDateString('ko-KR')}</td>
-                                <td><button onClick={handleEdit}>Edit</button></td>
+                                <td on><button onClick={handleEdit}>Edit</button></td>
                                 <td><button onClick={handleRemove}>X</button></td>
                             </tr>
                         )})
