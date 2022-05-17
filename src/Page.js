@@ -22,35 +22,44 @@ function Page() {
             },
         ],
     });
-    const [inputState, setInputState] = useState({});
+    const [inputState, setInputState] = useState({
+        brdwriter:'',
+        brdtitle:'',
+    });
 
     const {board} = state;
 
     const handleSaveData = (data) => {
-        setState({
-            maxNo: state.maxNo + 1, // 동작 원리가 뭔지? 먼저 수식계산했는데도 아래 적용이 안됨
-            board: state.board.concat({ brdno: state.maxNo, brddate: new Date(), ...data})
-        });
-        console.log(state.maxNo);
+        let board = state.board;
+        if(data.brdno===null || data.brdno==='' || data.brdno === undefined) {
+            setState({
+                maxNo: state.maxNo + 1, // 동작 원리가 뭔지? 먼저 수식계산했는데도 아래 적용이 안됨
+                board: state.board.concat({ brdno: state.maxNo, brddate: new Date(), ...data})
+            });
+        } else {
+            setState({
+                maxNo: state.maxNo,
+                board: board.map(row => data.brdno === row.brdno ? {...data}: row)
+            })
+        }
+        
+    
     }
 
-    const handleRemove = (e) => {
-        console.log(e);
-        
-        console.log(SelectedRow);
+    const handleRemove = (brdno) => {
 
-        // setState({
-        //     maxNo: state.maxNo,
-        //     board: state.board.filter(row => row.brdno !== selectedRow.brdno)
-        // })
-        // console.log(selectedRow.brdno);
+        setState({
+            maxNo: state.maxNo,
+            board: state.board.filter(row => row.brdno !== brdno)
+        })
+        console.log(brdno);
     }
     
-    const handleEditRow = (row) => {
-
-    }
-
-    const handleEdit = () => {
+    const handleEdit = (row) => {
+        inputTitle.current.value = row.brdtitle;
+        inputName.current.value = row.brdwriter;
+        setInputState(row);
+        // 화면에 뿌려야 됨
         
     }
 
@@ -86,14 +95,13 @@ function Page() {
                     </tr>
                     {
                         board.map(row => { return(
-                            // 재작성해야함
-                            <tr key={row.brdno} row={row} ref={SelectedRow} > 
+                            <tr key={row.brdno}> 
                                 <td>{row.brdno}</td>
                                 <td>{row.brdtitle}</td>
                                 <td>{row.brdwriter}</td>
                                 <td>{row.brddate.toLocaleDateString('ko-KR')}</td>
-                                <td on><button onClick={handleEdit}>Edit</button></td>
-                                <td><button onClick={handleRemove}>X</button></td>
+                                <td><button onClick={() => handleEdit(row)}>Edit</button></td>
+                                <td><button onClick={() => handleRemove(row.brdno)}>X</button></td>
                             </tr>
                         )})
                     }
